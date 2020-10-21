@@ -10,12 +10,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "electrodomestico.h"
 
 typedef struct
 {
+
     int id;
     int sector;
-    char valorDeChar;
+    char valorDeChar[100];
     float valor;
     int isEmpty;
 }estructura;
@@ -45,6 +47,17 @@ int utn_getName(char *aResultado, char *mensaje, char *mensajeError, int len,
 int utn_getNumber(int *pResultado, char *mensaje, char *mensajeError,
 	int minimo, int maximo, int reintentos);
 /*\brief Recibe un numero,por teclado,muestra un mensaje,muestra un mensaje de error,recibe un minimo y un maximo para el numero que se ingrese, recibe cantidad de reintentos.
+ * \param int* pResultado puntero a variable que recibe un valor por teclado y lo retorna por referencia.
+ * \param char* mensaje array de caracteres con mensaje.
+ * \param char* mensajeError array de caracteres con mensaje de error.
+ * \param int minimo valor de minima que puede ingresarse.
+ * \param int maximo valor de maxima que puede ingresarse.
+ * \param int reintentos valor de cantidad de reintentos posibles.
+ *\ return int retorno (-1) si hay Error [algun puntero == NULL, minimo mayor a maximo, reintentos negativos] - (0) si está Ok
+ */
+int utn_getUnsignedNumber(int *pResultado, char *mensaje, char *mensajeError,
+	int minimo, int maximo, int reintentos);
+/*\brief Recibe un numero,por teclado,muestra un mensaje,muestra un mensaje de error,recibe un minimo y un maximo para el numero que se ingrese, recibe cantidad de reintentos.
  * \param float* pResultado puntero a variable que recibe un valor por teclado y lo retorna por referencia.
  * \param char* mensaje array de caracteres con mensaje.
  * \param char* mensajeError array de caracteres con mensaje de error.
@@ -53,6 +66,7 @@ int utn_getNumber(int *pResultado, char *mensaje, char *mensajeError,
  * \param int reintentos valor de cantidad de reintentos posibles.
  *\ return int retorno (-1) si hay Error [algun puntero == NULL, minimo mayor a maximo, reintentos negativos] - (0) si está Ok
  */
+
 float utn_getNumberFloat(float *pResultado, char *mensaje, char *mensajeError,
 	float minimo, float maximo, int reintentos);
 /*\brief Recibe un numero y lo convierte a int.
@@ -60,6 +74,11 @@ float utn_getNumberFloat(float *pResultado, char *mensaje, char *mensajeError,
  *\ return int retorno (-1) si hay Error [puntero == NULL] - (0) si está Ok
  */
 int getInt(int *pResultado);
+/*\brief Recibe un numero y lo convierte a int.
+ * \param int *pResultado array de numeros, retorna por referencia.
+ *\ return int retorno (-1) si hay Error [puntero == NULL] - (0) si está Ok
+ */
+int getIntUnsigned(int *pResultado);
 /*\brief Recibe un numero y lo convierte a float.
  * \param float *pResultado array de numeros, retorna por referencia.
  *\ return int retorno (-1) si hay Error [puntero == NULL] - (0) si está Ok
@@ -70,6 +89,11 @@ int getFloat(float *pResultado);
  *\ return int retorno (-1) si hay Error [puntero == NULL] - (0) si está Ok
  */
 int isNumber(char* pResultado);
+/*\brief Valida si el dato ingresado es un numero.
+ * \param char *pResultado array de caracteres numericos.
+ *\ return int retorno (-1) si hay Error [puntero == NULL] - (0) si está Ok
+ */
+int isValidNumber(char* pResultado);
 /*\brief Valida si el dato ingresado es una cadena de caracteres.
  * \param char *aResultado array de caracteres.
  *\ return int retorno (-1) si hay Error [puntero == NULL] - (0) si está Ok
@@ -110,7 +134,7 @@ int get_ID(int valorId, int *id);
  * \param int len valor de largo del array.
  *\ return int ret (-1) si hay Error [puntero == NULL o largo de array <0] - (pasaje del i por valor) si está Ok
  */
-int get_FreeSpace(estructura *list, int len);
+int get_FreeSpace(eElectrodomestico *list, int len);
 /*\brief Entrega la cantidad de salarios acumulados.
  * \param estructura*list puntero a la estructura.
  * \param float * valorFloat valor de puntero que recibe el valor del salario y lo devuelve por referencia.
@@ -137,7 +161,7 @@ int promedioPorEstructura(estructura *list, float *pCalculoResultProm, int len);
  * \param int len valor de largo del array.
  *\ return int ret (-1) si hay Error [puntero == NULL o largo de array <0] - (0) si está Ok
  */
-int inicializarEstructura(estructura *list, int len);
+int inicializarEstructura(eElectrodomestico *list, int len);
 /*\brief Agrega un usuario con sus datos (nombre, apellido,id,salario y sector).
  * \param estructura*list puntero a array de estructura.
  * \param int len valor de largo del array.
@@ -147,8 +171,10 @@ int inicializarEstructura(estructura *list, int len);
  * \param int sector valor de sector del usuario.
  *\ return int ret (-1) si hay Error [puntero == NULL o largo de array <0] - (0) si está Ok
  */
-int agregarUsuario(estructura *list, int len, int id, char arrayChar[],
-	float valor, int sector);
+int agregarUsuario(eElectrodomestico *list, int len, int id, int serie,
+	int modelo);
 
-
+int findElectroById(eElectrodomestico *list, int len, int id);
+int printOneElectro(eElectrodomestico *list, eMarca *lista, int index,int id);
+int utn_getFecha(char *fecha,int dia, int mes, int anio,int len);
 #endif /* VALIDACION_H_ */

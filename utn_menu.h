@@ -9,6 +9,6 @@
 #define MENU_H_
 
 
+int menuOpciones();
 
 #endif /* MENU_H_ */
-int menuOpciones();

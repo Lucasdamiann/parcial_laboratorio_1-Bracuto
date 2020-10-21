@@ -8,10 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "utn.h"
-
-
-
-
+#include "reparacion.h"
 
 int utn_getName(char *aResultado, char *mensaje, char *mensajeError, int len,
 	char minimo, char maximo, int retries)
@@ -26,8 +23,7 @@ int utn_getName(char *aResultado, char *mensaje, char *mensajeError, int len,
 	    printf("%s", mensaje);
 	    fflush(stdin);
 
-	    if (myGets(buffer, sizeof(buffer)) == 0
-		    && isName(buffer) == 1)
+	    if (myGets(buffer, sizeof(buffer)) == 0 && isName(buffer) == 1)
 		{
 		strupr(strncpy(aResultado, buffer, len));
 		retorno = 0;
@@ -78,6 +74,35 @@ int utn_getNumber(int *pResultado, char *mensaje, char *mensajeError,
 	}
     return retorno;
     }
+int utn_getUnsignedNumber(int *pResultado, char *mensaje, char *mensajeError,
+	int minimo, int maximo, int reintentos)
+    {
+    int retorno = -1;
+    int bufferInt;
+    if (pResultado != NULL && mensaje != NULL && mensajeError != NULL
+	    && minimo <= maximo && reintentos > 0)
+	{
+	do
+	    {
+	    printf("%s", mensaje);
+
+	    if (getIntUnsigned(&bufferInt) == 0 && bufferInt >= minimo
+		    && bufferInt <= maximo)
+		{
+		*pResultado = bufferInt;
+		retorno = 0;
+		break;
+		}
+	    else
+		{
+		printf("%s", mensajeError);
+		reintentos--;
+		}
+	    }
+	while (reintentos >= 0);
+	}
+    return retorno;
+    }
 float utn_getNumberFloat(float *pResultado, char *mensaje, char *mensajeError,
 	float minimo, float maximo, int reintentos)
     {
@@ -90,7 +115,8 @@ float utn_getNumberFloat(float *pResultado, char *mensaje, char *mensajeError,
 	    {
 	    printf("%s", mensaje);
 
-	    if (getFloat(&bufferFloat) == 0 && bufferFloat >= minimo && bufferFloat <= maximo)
+	    if (getFloat(&bufferFloat) == 0 && bufferFloat >= minimo
+		    && bufferFloat <= maximo)
 		{
 		*pResultado = bufferFloat;
 		retorno = 0;
@@ -107,14 +133,29 @@ float utn_getNumberFloat(float *pResultado, char *mensaje, char *mensajeError,
     return retorno;
     }
 
-
 int getInt(int *pResultado)
     {
     int retorno = -1;
     char buffer[4096];
     if (pResultado != NULL)
 	{
-	if (myGets(buffer, sizeof(buffer)) == 0 && isNumber(buffer)==1)
+	if (myGets(buffer, sizeof(buffer)) == 0 && isNumber(buffer) == 1)
+	    {
+	    *pResultado = atoi(buffer);
+	    retorno = 0;
+
+	    }
+	}
+    return retorno;
+    }
+
+int getIntUnsigned(int *pResultado)
+    {
+    int retorno = -1;
+    char buffer[4096];
+    if (pResultado != NULL)
+	{
+	if (myGets(buffer, sizeof(buffer)) == 0 && isValidNumber(buffer) == 1)
 	    {
 	    *pResultado = atoi(buffer);
 	    retorno = 0;
@@ -130,7 +171,7 @@ int getFloat(float *pResultado)
     char buffer[4096];
     if (pResultado != NULL)
 	{
-	if (myGets(buffer, sizeof(buffer)) == 0 && isNumber(buffer)==1)
+	if (myGets(buffer, sizeof(buffer)) == 0 && isNumber(buffer) == 1)
 	    {
 	    *pResultado = atof(buffer);
 	    retorno = 0;
@@ -165,6 +206,21 @@ int isNumber(char *pResultado)
 		break;
 		}
 
+	    }
+	}
+    return retorno;
+    }
+
+int isValidNumber(char *pResultado)
+    {
+    int retorno = 1;
+    int i;
+    for (i = 0; pResultado[i] != '\0'; i++)
+	{
+	if (pResultado[i] < '0' || pResultado[i] > '9')
+	    {
+	    retorno = 0;
+	    break;
 	    }
 	}
     return retorno;
@@ -230,17 +286,18 @@ int orderArray(int *recibeArray, int len)
     int retorno = -1;
     int aux;
     int flag = 0;
-    int contador=0;
+    int contador = 0;
     int nuevoLimite;
 
     if (recibeArray != NULL && len > 0)
 	{
-	nuevoLimite=len-1;
+	nuevoLimite = len - 1;
 	while (flag == 0)
 	    {
 	    flag = 1;
 	    for (int i = 0; i < nuevoLimite; i++)
-		{contador++;
+		{
+		contador++;
 		if (recibeArray[i] > recibeArray[i + 1])
 		    {
 		    aux = recibeArray[i];
@@ -252,7 +309,8 @@ int orderArray(int *recibeArray, int len)
 
 		}
 	    nuevoLimite--;
-	    }retorno =contador;
+	    }
+	retorno = contador;
 	}
     return retorno;
     }
@@ -268,7 +326,7 @@ int get_ID(int valorId, int *id)
 	}
     return ret;
     }
-int get_FreeSpace(estructura *list, int len)
+int get_FreeSpace(eElectrodomestico *list, int len)
     {
     int ret = -1;
     if (list != NULL && len > 0)
@@ -361,7 +419,12 @@ int ordenaConCriterio(estructura *list, int len, int order)
 	    flag = 1;
 	    for (int i = 0; i < nuevoLimite; i++)
 		{
-		if (((strcmp(list[i].valorDeChar, list[i + 1].valorDeChar) < 0)&& order == 0) || ((strcmp(list[i].valorDeChar, list[i + 1].valorDeChar) == 0) && ((list[i].sector < list[i + 1].sector) && order == 0)))
+		if (((strcmp(list[i].valorDeChar, list[i + 1].valorDeChar) < 0)
+			&& order == 0)
+			|| ((strcmp(list[i].valorDeChar,
+				list[i + 1].valorDeChar) == 0)
+				&& ((list[i].sector < list[i + 1].sector)
+					&& order == 0)))
 		    {
 		    aux = list[i];
 		    list[i] = list[i + 1];
@@ -369,7 +432,12 @@ int ordenaConCriterio(estructura *list, int len, int order)
 		    retorno = 0;
 		    flag = 0;
 		    }
-		else if (((strcmp(list[i].valorDeChar, list[i + 1].valorDeChar) > 0) && order == 1)|| ((strcmp(list[i].valorDeChar, list[i + 1].valorDeChar) == 0) && ((list[i].sector > list[i + 1].sector) && order == 1)))
+		else if (((strcmp(list[i].valorDeChar, list[i + 1].valorDeChar)
+			> 0) && order == 1)
+			|| ((strcmp(list[i].valorDeChar,
+				list[i + 1].valorDeChar) == 0)
+				&& ((list[i].sector > list[i + 1].sector)
+					&& order == 1)))
 		    {
 		    aux = list[i];
 		    list[i] = list[i + 1];
@@ -383,7 +451,7 @@ int ordenaConCriterio(estructura *list, int len, int order)
 	}
     return retorno;
     }
-int inicializarEstructura(estructura *list, int len)
+int inicializarEstructura(eElectrodomestico *list, int len)
     {
     int retorno = -1;
     if (list != NULL && len > 0)
@@ -397,21 +465,83 @@ int inicializarEstructura(estructura *list, int len)
 	}
     return retorno;
     }
-int agregarUsuario(estructura *list, int len, int id, char arrayChar[],
-	float salary, int sector)
+int agregarUsuario(eElectrodomestico *list, int len, int id, int serie,
+	int modelo)
     {
     int ret = -1;
     int position;
-    if (list != NULL != NULL && arrayChar != NULL && len > 0)
+
+    if (list != NULL && len > 0)
 	{
 	position = get_FreeSpace(list, 200);
-	list[position].id = id;
-	strncpy(list[position].valorDeChar, arrayChar, 200);
-		list[position].valor = salary;
-	list[position].sector = sector;
+
+	list[position].idElectro = id;
+	list[position].numSerie = serie;
+	list[position].modelo = modelo;
 	list[position].isEmpty = 0;
 	ret = 0;
 	}
     return ret;
     }
 
+int printVarios(eElectrodomestico *list, eMarca *lista,int idMarca, int len)
+    {
+    int retorno = -1;
+    if (list != NULL && lista != NULL && len > 0)
+	{
+	printf(
+		"\n[MARCA]          [MODELO] 	        [ID EQUIPO]          [NUM.SERIE]          \n");
+	for (int i = 0; i < len; i++)
+	    {
+	    if (list[i].isEmpty == 0)
+		{
+		printf(
+			"\n»%-10s       »%-10d         »%-4.4d          »%-4.4d             \n",
+			lista[idMarca].descripcion, list[i].modelo, list[i].idElectro,
+			list[i].numSerie);
+		}
+
+	    }
+	retorno = 0;
+	}
+    return retorno;
+    }
+
+
+
+int findById(eElectrodomestico *list, int len, int id)
+    {
+    int ret = -1;
+    if (list != NULL && len>0)
+	{
+	for (int i = 0; i < len; i++)
+	    {
+	    if (list[i].idElectro == id && list[i].isEmpty == 0)
+		{
+		ret = i;
+		break;
+		}
+	      }
+	}
+    return ret;
+    }
+int utn_getFecha(char *fecha,int dia, int mes, int anio,int len)
+    {
+    int ret=-1;
+    if(fecha !=NULL && len>0)
+	{
+	if((dia>=1 && dia<=31) && (mes>=1 && mes<=12) && (anio>1900 && anio <=2020)&&((mes == 4 || mes == 6 || mes==9 || mes == 11 ) && dia<31) && (mes==2 && dia<30 ))
+	    {
+	for(int i=0;i<2;i++)
+	    {
+	    fecha[i]=dia;
+	    fecha[i]=mes;
+	    fecha[i]=anio;
+
+	    printf("%d/%d/%d",dia,mes,anio);
+	    }
+	    ret = 0;
+	    }
+	}
+    return ret;
+    }
