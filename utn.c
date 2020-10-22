@@ -509,39 +509,3 @@ int printVarios(eElectrodomestico *list, eMarca *lista,int idMarca, int len)
 
 
 
-int findById(eElectrodomestico *list, int len, int id)
-    {
-    int ret = -1;
-    if (list != NULL && len>0)
-	{
-	for (int i = 0; i < len; i++)
-	    {
-	    if (list[i].idElectro == id && list[i].isEmpty == 0)
-		{
-		ret = i;
-		break;
-		}
-	      }
-	}
-    return ret;
-    }
-int utn_getFecha(char *fecha,int dia, int mes, int anio,int len)
-    {
-    int ret=-1;
-    if(fecha !=NULL && len>0)
-	{
-	if((dia>=1 && dia<=31) && (mes>=1 && mes<=12) && (anio>1900 && anio <=2020)&&((mes == 4 || mes == 6 || mes==9 || mes == 11 ) && dia<31) && (mes==2 && dia<30 ))
-	    {
-	for(int i=0;i<2;i++)
-	    {
-	    fecha[i]=dia;
-	    fecha[i]=mes;
-	    fecha[i]=anio;
-
-	    printf("%d/%d/%d",dia,mes,anio);
-	    }
-	    ret = 0;
-	    }
-	}
-    return ret;
-    }

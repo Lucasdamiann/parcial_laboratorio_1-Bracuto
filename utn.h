@@ -171,10 +171,5 @@ int inicializarEstructura(eElectrodomestico *list, int len);
  * \param int sector valor de sector del usuario.
  *\ return int ret (-1) si hay Error [puntero == NULL o largo de array <0] - (0) si está Ok
  */
-int agregarUsuario(eElectrodomestico *list, int len, int id, int serie,
-	int modelo);
 
-int findElectroById(eElectrodomestico *list, int len, int id);
-int printOneElectro(eElectrodomestico *list, eMarca *lista, int index,int id);
-int utn_getFecha(char *fecha,int dia, int mes, int anio,int len);
 #endif /* VALIDACION_H_ */
