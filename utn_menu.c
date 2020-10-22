@@ -20,7 +20,6 @@ int menuOpciones()
     int flag2 = 0;
     int identify = 0;
     int identifyRep = 0;
-    int identifyCli = 100;
     int index;
     int contadorElectro = 0;
     eCliente cliente[QTY_ELEC];
@@ -99,8 +98,8 @@ int menuOpciones()
 		    case 2:
 			printf("\nMODIFICACION DE MODELO\n");
 			utn_getNumber(&electro[index].modelo,
-				"\nINGRESE MODELO NUEVO: ", "\nALGO SALIO MAL\n",
-				1900, 2020, 2);
+				"\nINGRESE MODELO NUEVO: ",
+				"\nALGO SALIO MAL\n", 1900, 2020, 2);
 			printf("\n¡MODIFICACION REALIZADA!\n");
 			printOneElectro(electro, marca, index,
 				auxMarca.idMarca);
@@ -240,19 +239,30 @@ int menuOpciones()
 		case 1:
 		    get_ID(identifyRep, &identifyRep);
 		    printElectros(electro, QTY_ELEC);
-		    utn_getNumber(&auxElectro.idElectro,
+		    if (utn_getNumber(&auxElectro.idElectro,
 			    "\nINGRESE ID DE ELECTRODOMESTICO: ",
-			    "\nID INEXISTENTE\n", 1, 3000, 2);
-		    printServicios(servicios, QTY_SRV);
-		    utn_getNumber(&auxServ.idServicio,
-			    "\nINGRESE ID DE SERVICIO: ", "\nID INEXISTENTE\n",
-			    20000, 20003, 2);
-		    get_ID(identifyCli, &identifyCli);
-		    printf("\nINGRESE FECHA DE ALTA\n");
-		    agregarReparacion(reparacion, QTY_ELEC, identifyRep,
-			    identifyCli, auxServ.idServicio,
-			    auxElectro.idElectro);
-		    flag2 = 1;
+			    "\nID INEXISTENTE\n", 1, 3000, 2) == 0)
+			{
+			printServicios(servicios, QTY_SRV);
+			if (utn_getNumber(&auxServ.idServicio,
+				"\nINGRESE ID DE SERVICIO: ",
+				"\nID INEXISTENTE\n", 20000, 20003, 2)==0)
+			    {
+			    printf("\nINGRESE FECHA DE ALTA\n");
+			    agregarReparacion(reparacion, QTY_ELEC, identifyRep,
+				    auxServ.idServicio, auxElectro.idElectro);
+			    flag2 = 1;
+			    }
+			else
+			    {
+			    break;
+			    }
+			}
+		    else
+			{
+			break;
+			}
+
 		    printf("\n\n");
 		    break;
 		case 2:
@@ -271,7 +281,7 @@ int menuOpciones()
 	case 8:
 	    if (flag2 == 1)
 		{
-		printReparaciones(reparacion, QTY_ELEC);
+		printReparaciones(reparacion, cliente, QTY_ELEC);
 		printf("\n\n");
 		}
 	    else

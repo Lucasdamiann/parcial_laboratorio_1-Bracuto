@@ -40,7 +40,7 @@ typedef struct
 typedef struct
     {
 	int id;
-	int idCliente;
+	eCliente idCliente;
 	int numSerieElectro; //validar
 	int idServ; //validar
 	eFecha fecha;
@@ -73,7 +73,7 @@ int printServicios(eServicio *list, int len);
  * \param int numSerieElectro valor de serie de electrodomestico.
  *\ return int ret (-1) si hay Error [puntero == NULL o largo de array <0] - (0) si está Ok
  */
-int agregarReparacion(eReparacion *list, int len, int idRep, int cliente,
+int agregarReparacion(eReparacion *list, int len, int idRep,
 	int servicio, int numSerieElectro);
 /*\brief Recorre la estructura buscando cada campo isEmpty en 1 (vacio).
  * \param eReparacion*list puntero a array de estructura.
@@ -94,10 +94,11 @@ void hardcodeoCliente(eCliente *list, int len);
 int printClientes(eCliente *lista, int len);
 /*\brief Recorre la estructura imprimiendo los los campos especificados.
  * \param eReparacion*list puntero a array de estructura.
+ * \param eCliente*list puntero a array de estructura.
  * \param int len valor de largo del array.
  *\ return int retorno (-1) si hay Error [puntero == NULL o largo de array <0] - (0) si está Ok
  */
-int printReparaciones(eReparacion *lista, int len);
+int printReparaciones(eReparacion *lista,eCliente*list, int len);
 /*\brief Pide y valida los valores ingresados como dia mes y año.
  * \param eReparacion*list puntero a array de estructura.
  * \param int index valor de indice del array.

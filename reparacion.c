@@ -49,7 +49,7 @@ int printServicios(eServicio *list, int len)
 	}
     return retorno;
     }
-int agregarReparacion(eReparacion *list, int len, int idRep, int cliente,
+int agregarReparacion(eReparacion *list, int len, int idRep,
 	int servicio, int numSerieElectro)
     {
     int ret = -1;
@@ -61,7 +61,7 @@ int agregarReparacion(eReparacion *list, int len, int idRep, int cliente,
 	if (validaFecha(list, position, len) == 0)
 	    {
 	    list[position].id = idRep;
-	    list[position].idCliente = cliente;
+	  //  list[position].idCliente.idCliente = cliente;
 	    list[position].idServ = servicio;
 	    list[position].numSerieElectro = numSerieElectro;
 	    list[position].isEmpty = 0;
@@ -91,22 +91,22 @@ void hardcodeoCliente(eCliente *list, int len)
     eCliente cliente[] =
 	{
 	    {
-	    0001, "Franco", "Armani", 0
+	    4001, "Franco", "Armani", 0
 	    },
 	    {
-	    0002, "Javier", "Pinola", 0
+	    4002, "Javier", "Pinola", 0
 	    },
 	    {
-	    0003, "Milton", "Casco", 0
+	    4003, "Milton", "Casco", 0
 	    },
 	    {
-	    0004, "Gonzalo", "Montiel", 0
+	    4004, "Gonzalo", "Montiel", 0
 	    },
 	    {
-	    0005, "Enzo", "Perez", 0
+	    4005, "Enzo", "Perez", 0
 	    },
 	    {
-	    0006, "Robert", "Rojas", 0
+	    4006, "Paulo", "Diaz", 0
 	    }
 	};
 
@@ -136,7 +136,7 @@ int printClientes(eCliente *lista, int len)
 	}
     return retorno;
     }
-int printReparaciones(eReparacion *lista, int len)
+int printReparaciones(eReparacion *lista,eCliente*list, int len)
     {
     int retorno = -1;
     if (lista != NULL && len > 0)
@@ -145,16 +145,15 @@ int printReparaciones(eReparacion *lista, int len)
 		"\n[SERVICIO]          [SERIE ELECTRODOMESTICO]          [ID CLIENTE]          [FECHA]\n");
 	for (int i = 0; i < len; i++)
 	    {
-	    if (lista[i].isEmpty == 0)
+	    if (lista[i].isEmpty == 0 && lista[i].idCliente.isEmpty == 0)
 		{
-
 		printf(
-			"\n»%-10d         »%-10.4d                       »%-4.4d                 »%d/%d/%4d\n",
+			"\n»%-10d         »%-10.4d                       »%-4d                 »%d/%d/%4d\n",
 			lista[i].idServ, lista[i].numSerieElectro,
-			lista[i].idCliente, lista[i].fecha.dia,
+			list[i].idCliente, lista[i].fecha.dia,
 			lista[i].fecha.mes, lista[i].fecha.anio);
-
 		}
+
 	    }
 	retorno = 0;
 	}
